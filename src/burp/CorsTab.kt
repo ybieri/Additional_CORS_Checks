@@ -166,7 +166,48 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
             null
         )
 
-        cors.color = setColorForRequest(requestResponse)
+
+
+
+        val color = setColorForRequest(requestResponse)
+        cors.color = color
+
+        var detail = ""
+        val analyzedRequest = this.callbacks.helpers?.analyzeRequest(requestResponse)
+        val message = Array<IHttpRequestResponse>(1){requestResponse}
+        for(reqHeader in analyzedRequest!!.headers){
+            if(reqHeader.startsWith("Origin:", ignoreCase=true)){
+                detail = reqHeader
+            }
+        }
+
+        // TODO: refactor. Maybe enum. Also, add function for issue adding. Also, add remediation for issues. Also, make only one issue per request
+        if(color == Color.RED){
+            val corsIssue = CorsIssue(
+                requestResponse.httpService,
+                analyzedRequest.url,
+                message,
+                "Cors Issue",
+                "The following Origin header was reflected: \"$detail\".<br>Additionally, \"Access-Control-Allow-Credentials: true\" was set.",
+                "High",
+                "Certain",
+                "Remediation TODO"
+            )
+            callbacks.addScanIssue(corsIssue)
+        } else if (color == Color.YELLOW){
+            val corsIssue = CorsIssue(
+                requestResponse.httpService,
+                analyzedRequest.url,
+                message,
+                "Cors Issue",
+                "The following Origin header was reflected: \"$detail\".<br>But, \"Access-Control-Allow-Credentials: true\" was NOT set.",
+                "Low",
+                "Certain",
+                "Remediation TODO"
+            )
+            callbacks.addScanIssue(corsIssue)
+        }
+
 
         model.addCors(cors)
 
@@ -204,6 +245,7 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
                  acao = true
              }
         }
+
 
 
         return if(acac && acao){
