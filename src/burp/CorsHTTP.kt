@@ -25,7 +25,6 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
             val ignoredExtensions = arrayOf("ico", "svg")
 
 
-            stdout.println(analyzedRequest.url.path.substringAfterLast("."))
             if(analyzedRequest.url.path.substringAfterLast(".") in ignoredExtensions){
                 return
             }

@@ -208,7 +208,6 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
 
         return if(acac && acao){
             Color.RED
-
         }else if(acao){
             Color.YELLOW
         } else {
