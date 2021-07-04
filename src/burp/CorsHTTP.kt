@@ -8,7 +8,6 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
     override fun processHttpMessage(toolFlag: Int, messageIsRequest: Boolean, messageInfo: IHttpRequestResponse) {
 
         val stdout = PrintWriter(callbacks.stdout, true)
-        stdout.println("Entered processHttpMessage")
         val analyzedRequest = callbacks.helpers.analyzeRequest(messageInfo)
 
         var requests = ArrayList<IHttpRequestResponse>()
@@ -46,7 +45,9 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
                 requests.add(messageInfo)
 
                 // add all cors requests
-                requests.addAll(performCorsRequests(messageInfo))
+                val url = table.corsOptions.urlTextField.text
+                val helper = CorsHelper(callbacks, url)
+                requests.addAll(helper.generateCorsRequests(messageInfo))
             }
         }
 
@@ -56,13 +57,6 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
         }
 
     }
-
-    private fun performCorsRequests(messageInfo: IHttpRequestResponse): Collection<IHttpRequestResponse> {
-        val helper = CorsHelper(callbacks, table)
-        return helper.generateCorsRequests(messageInfo)
-    }
-
-
 }
 
 

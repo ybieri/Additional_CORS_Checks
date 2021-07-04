@@ -140,7 +140,6 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
         requestResponse: IHttpRequestResponse,
     ) {
         val stdout = PrintWriter(callbacks.stdout, true)
-        stdout.println("creating cors item");
 
         val savedRequestResponse = callbacks.saveBuffersToTempFiles(requestResponse)
         val requestInfo = callbacks.helpers.analyzeRequest(requestResponse)
@@ -178,19 +177,12 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
 
         val request = callbacks.helpers.analyzeRequest(savedRequestResponse.request)
         val response = callbacks.helpers.analyzeResponse(savedRequestResponse.response)
-
-        val stdout = PrintWriter(callbacks.stdout, true)
-        stdout.println("Marking ${response.headers}");
-
-
         return evaluateColor(request, response)
 
     }
 
     // evaluate whether none, yellow, or red
     private fun evaluateColor(request: IRequestInfo?, response: IResponseInfo?): Color? {
-        val stdout = PrintWriter(callbacks.stdout, true)
-
 
         var acac = false
         var acao = false
@@ -200,11 +192,9 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
         for(reqHeader in request!!.headers){
             if(reqHeader.startsWith("Origin:", ignoreCase=true)){
                 origin = reqHeader.substringAfter(":")
-                stdout.println("Req origin is: $origin")
             }
         }
 
-        stdout.println("Got $origin");
 
         // check if ACAC and/or ACAO are set
         for(respHeader in response!!.headers){
@@ -214,11 +204,11 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
                  acao = true
              }
         }
-        stdout.println("Got $acac and $acao");
 
 
         return if(acac && acao){
             Color.RED
+
         }else if(acao){
             Color.YELLOW
         } else {
@@ -251,16 +241,15 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
                 RequestResponse(requestViewer?.message, null, messageEditor.httpService)
             }
 
-            corsOptions.urlTextField.text
-
-            val helper = CorsHelper(callbacks, )
-            helper.generateCorsRequests(requestResponse)
+            val url = corsOptions.urlTextField.text
+            val helper = CorsHelper(callbacks, url)
+            val requests = helper.generateCorsRequests(requestResponse)
 
             withContext(Dispatchers.Swing) {
                 SwingUtilities.invokeLater {
-                    responseViewer?.setMessage(requestResponse?.response ?: ByteArray(0), false)
-                    if (requestResponse != null) {
-                        createCors(requestResponse)
+                    for(request in requests) {
+                        responseViewer?.setMessage(request.response ?: ByteArray(0), false)
+                        createCors(request)
                     }
                 }
             }
