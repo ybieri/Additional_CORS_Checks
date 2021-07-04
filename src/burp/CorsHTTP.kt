@@ -9,17 +9,45 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
 
         val stdout = PrintWriter(callbacks.stdout, true)
         stdout.println("Entered processHttpMessage")
-        val helper = CorsHelper(callbacks)
+        val analyzedRequest = callbacks.helpers.analyzeRequest(messageInfo)
 
         var requests = ArrayList<IHttpRequestResponse>()
 
+        // if deactivated, don't perform any actions
+        if(!table.corsOptions.isActive.isSelected){
+            return
+        }
+
+        if (!messageIsRequest) {
+            val analyzedResponse = callbacks.helpers.analyzeResponse(messageInfo.response)
+
+            // ignore JS and images if box is checked
+            val ignoredMime = arrayOf("script", "PNG", "JPEG", "CSS")
+            val ignoredExtensions = arrayOf("ico", "svg")
+
+
+            stdout.println(analyzedRequest.url.path.substringAfterLast("."))
+            if(analyzedRequest.url.path.substringAfterLast(".") in ignoredExtensions){
+                return
+            }
+
+            if (table.corsOptions.ignoreJSAndImages.isSelected && analyzedResponse.statedMimeType in ignoredMime){
+                return
+            }
+        }
+
         // avoid infinite loop -> ignore extension requests
         if(toolFlag != IBurpExtenderCallbacks.TOOL_EXTENDER){
-            // add original request
-            requests.add(messageInfo)
 
-            // add all cors requests
-            requests.addAll(helper.generateCorsRequests(messageInfo))
+            // ignore if out of scope request and only in scope button selected
+            if(table.corsOptions.inScope.isSelected && callbacks.isInScope(analyzedRequest.url) || !table.corsOptions.inScope.isSelected){
+
+                // add original request
+                requests.add(messageInfo)
+
+                // add all cors requests
+                requests.addAll(performCorsRequests(messageInfo))
+            }
         }
 
         // process responses
@@ -29,12 +57,10 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
 
     }
 
-
-
-
-
-
-
+    private fun performCorsRequests(messageInfo: IHttpRequestResponse): Collection<IHttpRequestResponse> {
+        val helper = CorsHelper(callbacks, table)
+        return helper.generateCorsRequests(messageInfo)
+    }
 
 
 }

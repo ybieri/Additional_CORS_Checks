@@ -2,7 +2,7 @@ package burp
 
 import java.util.*
 
-class CorsHelper(private val callbacks: IBurpExtenderCallbacks) {
+class CorsHelper(private val callbacks: IBurpExtenderCallbacks, private val url: String) {
 
 
     private fun cloneIHttpRequestResponse(
@@ -84,9 +84,7 @@ class CorsHelper(private val callbacks: IBurpExtenderCallbacks) {
 
         val analyzedRequest = callbacks.helpers.analyzeRequest(messageInfo)
 
-        val url = "www.evil.com" // TODO: make variable
         val baseUrl = messageInfo.httpService.host
-
 
         for(corsHeader in corsHeaders(url, baseUrl)) {
             val newReq = cloneIHttpRequestResponse(messageInfo)

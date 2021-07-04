@@ -1,6 +1,8 @@
 package burp
 
 import java.awt.FlowLayout
+import java.awt.event.ActionListener
+import java.util.*
 import javax.swing.*
 
 class CorsOptions(
@@ -9,32 +11,47 @@ class CorsOptions(
 ) {
     val panel = JSplitPane(JSplitPane.HORIZONTAL_SPLIT)
     private val loadPanel = JPanel(FlowLayout(FlowLayout.RIGHT))
-    private val filterBar = JTextField("", 20)
-    private val filterPanel = JPanel(FlowLayout(FlowLayout.LEFT))
-    private val tagComboBox = JComboBox(arrayOf<String>()) // chnge to text field
+    val urlTextField = JTextField("www.example.com", 20)
+    private val configPanel = JPanel(FlowLayout(FlowLayout.LEFT))
+    val inScope = JCheckBox("Only in scope?")
+    val isActive = JCheckBox("Activate CORS?")
+    val ignoreJSAndImages = JCheckBox("Ignore JS, CSS, images?")
+    //private val tagComboBox = JComboBox(arrayOf<String>()) // chnge to text field
 
     init {
-        val loadButton = JButton("Load Highlighted Proxy History")
+        //val loadButton = JButton("Load Highlighted Proxy History")
         val clearButton = JButton("Clear Cors Requests")
-        val filterLabel = JLabel("URL for CORS:")
-        val filterButton = JButton("Filter")
-        val resetButton = JButton("Reset")
-        tagComboBox.selectedIndex = -1
-        tagComboBox.prototypeDisplayValue = "Select tag"
-        tagComboBox.addItem("Select tag")
-        loadButton.addActionListener { loadHighlightedRequests() }
+        val urlTextLabel = JLabel("URL for CORS:")
+        //val uriButton = JButton("Filter")
+        //val resetButton = JButton("Reset")
+        //tagComboBox.selectedIndex = -1
+        //tagComboBox.prototypeDisplayValue = "Select tag"
+        //tagComboBox.addItem("Select tag")
+        //loadButton.addActionListener { loadHighlightedRequests() }
+        //uriButton.addActionListener( uriButtonAction() )
         clearButton.addActionListener { clearCors() }
-        filterPanel.add(filterLabel)
-        filterPanel.add(filterBar)
-        filterPanel.add(tagComboBox)
-        filterPanel.add(filterButton)
-        filterPanel.add(resetButton)
+        configPanel.add(urlTextLabel)
+        configPanel.add(urlTextField)
+        configPanel.add(inScope)
+        inScope.isSelected = true
+        configPanel.add(isActive)
+        isActive.isSelected = true
+        configPanel.add(ignoreJSAndImages)
+        ignoreJSAndImages.isSelected = true
+        //configPanel.add(tagComboBox)
+        //configPanel.add(uriButton)
+        //configPanel.add(resetButton)
         loadPanel.add(clearButton)
-        loadPanel.add(loadButton)
-        panel.leftComponent = filterPanel
+        //loadPanel.add(loadButton)
+        panel.leftComponent = configPanel
         panel.rightComponent = loadPanel
         panel.dividerSize = 0
     }
+
+    private fun uriButtonAction(): ActionListener? {
+        return null
+    }
+
     //modify, remove TODO
     private fun loadHighlightedRequests() {
         corsPanel.model.refreshCors()

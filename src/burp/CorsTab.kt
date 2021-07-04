@@ -49,10 +49,8 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
 
 
     private val repeatInTable = JCheckBox("Add repeated request to table")
+
     //serious TODO:
-
-
-
 
     init {
 
@@ -109,7 +107,7 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
         repeatInTable.isSelected = true
 
         repeatPanel.add(repeatButton)
-        repeatPanel.add(repeatInTable)
+        //repeatPanel.add(repeatInTable)
 
         val corsTable = JScrollPane(table)
         val reqResSplit =
@@ -241,16 +239,27 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
 
     private fun repeatRequest() {
         model.refreshCors()
+
         GlobalScope.launch(Dispatchers.IO) {
+
+
+
+
             val requestResponse = try {
                 callbacks.makeHttpRequest(messageEditor.httpService, requestViewer?.message)
             } catch (e: java.lang.RuntimeException) {
                 RequestResponse(requestViewer?.message, null, messageEditor.httpService)
             }
+
+            corsOptions.urlTextField.text
+
+            val helper = CorsHelper(callbacks, )
+            helper.generateCorsRequests(requestResponse)
+
             withContext(Dispatchers.Swing) {
                 SwingUtilities.invokeLater {
                     responseViewer?.setMessage(requestResponse?.response ?: ByteArray(0), false)
-                    if (repeatInTable.isSelected && requestResponse != null) {
+                    if (requestResponse != null) {
                         createCors(requestResponse)
                     }
                 }
