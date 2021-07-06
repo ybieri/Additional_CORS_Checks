@@ -71,8 +71,8 @@ class CorsHelper(private val callbacks: IBurpExtenderCallbacks, private val url:
         // dot not escaped
         if(BASE_URL.count{"." in BASE_URL} > 1){
             val lastindex = BASE_URL.lastIndexOf(".")
-            val url = BASE_URL.substring(0, lastindex).replace(".", "") + BASE_URL.substring(lastindex)
-            corsHeaderArr.add("Origin: http://$url")  // www.example.com -> wwwexample.com
+            val url = BASE_URL.substring(0, lastindex).replace(".", "x") + BASE_URL.substring(lastindex)
+            corsHeaderArr.add("Origin: https://$url")  // www.example.com -> wwwexample.com
 
         }
         return corsHeaderArr

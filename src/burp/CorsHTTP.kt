@@ -22,10 +22,9 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
 
             // ignore JS and images if box is checked
             val ignoredMime = arrayOf("script", "PNG", "JPEG", "CSS")
-            val ignoredExtensions = arrayOf("ico", "svg")
+            val extensions = table.corsOptions.ignoreExtension.text.replace(" ","").split(",").toTypedArray()
 
-
-            if(analyzedRequest.url.path.substringAfterLast(".") in ignoredExtensions){
+            if(analyzedRequest.url.path.substringAfterLast(".").lowercase() in extensions){
                 return
             }
 

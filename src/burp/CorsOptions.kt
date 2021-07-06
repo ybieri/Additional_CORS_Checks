@@ -13,15 +13,16 @@ class CorsOptions(
     private val loadPanel = JPanel(FlowLayout(FlowLayout.RIGHT))
     val urlTextField = JTextField("www.example.com", 20)
     private val configPanel = JPanel(FlowLayout(FlowLayout.LEFT))
-    val inScope = JCheckBox("Only in scope?")
     val isActive = JCheckBox("Activate CORS?")
-    val ignoreJSAndImages = JCheckBox("Ignore JS, CSS, images?")
+    val inScope = JCheckBox("Only in scope?")
+    val ignoreJSAndImages = JCheckBox("Ignore extensions:")
+    val ignoreExtension = JTextField("ico, svg, js, css, png", 30)
     //private val tagComboBox = JComboBox(arrayOf<String>()) // chnge to text field
 
     init {
         //val loadButton = JButton("Load Highlighted Proxy History")
-        val clearButton = JButton("Clear Cors Requests")
-        val urlTextLabel = JLabel("URL for CORS:")
+        val clearButton = JButton("Clear CORS Requests")
+        val urlTextLabel = JLabel("URL for CORS Requests:")
         //val uriButton = JButton("Filter")
         //val resetButton = JButton("Reset")
         //tagComboBox.selectedIndex = -1
@@ -32,12 +33,13 @@ class CorsOptions(
         clearButton.addActionListener { clearCors() }
         configPanel.add(urlTextLabel)
         configPanel.add(urlTextField)
-        configPanel.add(inScope)
-        inScope.isSelected = true
         configPanel.add(isActive)
         isActive.isSelected = true
+        configPanel.add(inScope)
+        inScope.isSelected = true
         configPanel.add(ignoreJSAndImages)
         ignoreJSAndImages.isSelected = true
+        configPanel.add(ignoreExtension)
         //configPanel.add(tagComboBox)
         //configPanel.add(uriButton)
         //configPanel.add(resetButton)

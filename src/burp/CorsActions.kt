@@ -20,33 +20,20 @@ class CorsActions(
     private val sendToRepeater = JMenuItem("Send request(s) to Repeater")
     private val sendToIntruder = JMenuItem("Send request(s) to Intruder")
     private val copyURLs = JMenuItem("Copy URL(s)")
-    private val deleteMenu = JMenuItem("Delete Bookmark(s)")
     private val clearMenu = JMenuItem("Clear Cors Requests")
-    private val addTag = JMenu("Add Tag")
-    private val existingTagsMenu = JMenu("Existing Tags")
-    private val newTag = JMenuItem("New Tag")
-    private val comments = JMenuItem("Add comment")
 
     init {
         sendToRepeater.addActionListener(this)
         sendToIntruder.addActionListener(this)
         copyURLs.addActionListener(this)
-        deleteMenu.addActionListener(this)
         clearMenu.addActionListener(this)
         actionsMenu.add(sendToRepeater)
         actionsMenu.add(sendToIntruder)
         actionsMenu.add(copyURLs)
         actionsMenu.addSeparator()
-        actionsMenu.add(deleteMenu)
         actionsMenu.add(clearMenu)
         actionsMenu.addSeparator()
-        newTag.addActionListener(this)
-        comments.addActionListener(this)
-        addTag.add(newTag)
-        addTag.add(existingTagsMenu)
-        actionsMenu.add(addTag)
         actionsMenu.addSeparator()
-        actionsMenu.add(comments)
         panel.table.componentPopupMenu = actionsMenu
     }
 
@@ -55,9 +42,7 @@ class CorsActions(
         if (table.selectedRow == -1) return
         val selectedCorss = getSelectedCors()
         when (val source = e?.source) {
-            deleteMenu -> {
-                panel.model.removeCors(selectedCorss)
-            }
+
             clearMenu -> {
                 panel.model.clearCors()
                 panel.requestViewer?.setMessage(ByteArray(0), true)
@@ -95,11 +80,7 @@ class CorsActions(
                                 selectedCors.requestResponse.request, null
                             )
                         }
-                        comments -> {
-                            //val newComments = JOptionPane.showInputDialog("Comments:", selectedCors.comments)
-                            //selectedBookmark.comments = newComments
-                            panel.model.refreshCors()
-                        }
+
                     }
                 }
             }

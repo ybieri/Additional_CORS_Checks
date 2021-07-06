@@ -18,7 +18,7 @@ import javax.swing.table.TableRowSorter
 
 class CorsTab(callbacks: IBurpExtenderCallbacks) : ITab {
     val corsTable = CorsPanel(callbacks)
-    override fun getTabCaption() = "CORS"
+    override fun getTabCaption() = "CORSAir"
     override fun getUiComponent() = corsTable.panel
 
 }
@@ -102,7 +102,7 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
 
         val repeatPanel = JPanel(FlowLayout(FlowLayout.LEFT))
 
-        val repeatButton = JButton("Repeat Request")
+        val repeatButton = JButton("Send CORS requests for selected entry")
         repeatButton.addActionListener { repeatRequest() }
         repeatInTable.isSelected = true
 

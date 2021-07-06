@@ -6,7 +6,7 @@ class CorsMenu(private val table: CorsPanel) : IContextMenuFactory {
     override fun createMenuItems(invocation: IContextMenuInvocation?): MutableList<JMenuItem> {
         val menuItems: MutableList<JMenuItem> = arrayListOf()
         val requests = invocation?.selectedMessages
-        val corsButton = JMenuItem("Add to CORS")
+        val corsButton = JMenuItem("Add Request to CORSAir")
         corsButton.addActionListener {
             if (requests != null) {
                 table.model.refreshCors()
