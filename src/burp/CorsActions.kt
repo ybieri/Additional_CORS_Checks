@@ -6,7 +6,6 @@ import java.awt.datatransfer.StringSelection
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.util.*
-import javax.swing.JMenu
 import javax.swing.JMenuItem
 import javax.swing.JPopupMenu
 import kotlin.collections.ArrayList

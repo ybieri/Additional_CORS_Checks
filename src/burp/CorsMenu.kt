@@ -1,16 +1,19 @@
 package burp
 
+import java.awt.Color
 import javax.swing.JMenuItem
 
 class CorsMenu(private val table: CorsPanel) : IContextMenuFactory {
     override fun createMenuItems(invocation: IContextMenuInvocation?): MutableList<JMenuItem> {
         val menuItems: MutableList<JMenuItem> = arrayListOf()
         val requests = invocation?.selectedMessages
-        val corsButton = JMenuItem("Add Request to CORSAir")
+        val corsButton = JMenuItem("Add Requests to CORSAir")
+        val colors = Array<Color?>(requests!!.size){i -> null}
+
         corsButton.addActionListener {
             if (requests != null) {
                 table.model.refreshCors()
-                table.addCorsRequestToTable(requests)
+                table.addCorsRequestToTable(requests, colors)
             }
         }
 

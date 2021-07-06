@@ -54,35 +54,7 @@ class CorsOptions(
         return null
     }
 
-    //modify, remove TODO
-    private fun loadHighlightedRequests() {
-        corsPanel.model.refreshCors()
-        SwingUtilities.invokeLater {
-            val corsarr = corsPanel.corsarr
-            val corsRequestResponse = corsarr.map {
-                Pair(
-                    callbacks.helpers.bytesToString(it.requestResponse.request),
-                    callbacks.helpers.bytesToString(it.requestResponse.response ?: ByteArray(0))
-                )
-            }
-            val proxyHistory = callbacks.proxyHistory.asSequence()
-            val corsToAdd = proxyHistory
-                .filter { it.highlight != null }
-                .filterNot {
-                    corsRequestResponse.contains(
-                        Pair(
-                            callbacks.helpers.bytesToString(it.request),
-                            callbacks.helpers.bytesToString(it.response ?: ByteArray(0))
-                        )
-                    )
-                }
-                .distinct()
-                .toList()
-                .toTypedArray()
-            corsPanel.addCorsRequestToTable(corsToAdd)
 
-        }
-    }
 
 
     private fun clearCors() {

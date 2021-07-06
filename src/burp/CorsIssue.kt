@@ -12,6 +12,7 @@ internal class CorsIssue(
     private val severity: String,
     private val confidence: String,
     private val remediation: String
+
 ) : IScanIssue {
     override fun getUrl(): URL {
         return url

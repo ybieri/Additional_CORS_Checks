@@ -42,9 +42,7 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
     private val messageEditor = MessageEditor(callbacks)
     val requestViewer: IMessageEditor? = messageEditor.requestViewer
     val responseViewer: IMessageEditor? = messageEditor.responseViewer
-
     val panel = JSplitPane(JSplitPane.VERTICAL_SPLIT)
-    val corsarr = model.corsObjArr
     val rowSorter = TableRowSorter(model)
 
 
@@ -81,9 +79,6 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
         table.columnModel.getColumn(4).preferredWidth = 50 // Status
         table.columnModel.getColumn(5).preferredWidth = 50 // Length
         table.columnModel.getColumn(6).preferredWidth = 50 // MIME
-
-
-
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
         table.rowSorter = rowSorter
         table.autoscrolls = true
@@ -130,14 +125,14 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
 
 
 
-    fun addCorsRequestToTable(requestsResponses: Array<IHttpRequestResponse>) {
-        for (requestResponse in requestsResponses) {
-            createCors(requestResponse)
+    fun addCorsRequestToTable(requestsResponses: Array<IHttpRequestResponse>, colors: Array<Color?>) {
+        for (i in requestsResponses.indices) {
+            createCors(requestsResponses[i], colors[i])
         }
     }
-    //TODO: needs refactoring
+
     private fun createCors(
-        requestResponse: IHttpRequestResponse,
+        requestResponse: IHttpRequestResponse, color: Color?
     ) {
         val stdout = PrintWriter(callbacks.stdout, true)
 
@@ -163,118 +158,21 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
             statusCode,
             length,
             mimeType,
-            null
+            color
         )
-
-
-
-
-        val color = setColorForRequest(requestResponse)
-        cors.color = color
-
-        var detail = ""
-        val analyzedRequest = this.callbacks.helpers?.analyzeRequest(requestResponse)
-        val message = Array<IHttpRequestResponse>(1){requestResponse}
-        for(reqHeader in analyzedRequest!!.headers){
-            if(reqHeader.startsWith("Origin:", ignoreCase=true)){
-                detail = reqHeader
-            }
-        }
-
-        // TODO: refactor. Maybe enum. Also, add function for issue adding. Also, add remediation for issues. Also, make only one issue per request
-        if(color == Color.RED){
-            val corsIssue = CorsIssue(
-                requestResponse.httpService,
-                analyzedRequest.url,
-                message,
-                "Cors Issue",
-                "The following Origin header was reflected: \"$detail\".<br>Additionally, \"Access-Control-Allow-Credentials: true\" was set.",
-                "High",
-                "Certain",
-                "Remediation TODO"
-            )
-            callbacks.addScanIssue(corsIssue)
-        } else if (color == Color.YELLOW){
-            val corsIssue = CorsIssue(
-                requestResponse.httpService,
-                analyzedRequest.url,
-                message,
-                "Cors Issue",
-                "The following Origin header was reflected: \"$detail\".<br>But, \"Access-Control-Allow-Credentials: true\" was NOT set.",
-                "Low",
-                "Certain",
-                "Remediation TODO"
-            )
-            callbacks.addScanIssue(corsIssue)
-        }
-
-
         model.addCors(cors)
 
     }
 
-    // color in depending if problem or not
-    private fun setColorForRequest(savedRequestResponse: IHttpRequestResponse): Color? {
-
-        val request = callbacks.helpers.analyzeRequest(savedRequestResponse.request)
-        val response = callbacks.helpers.analyzeResponse(savedRequestResponse.response)
-        return evaluateColor(request, response)
-
-    }
-
-    // evaluate whether none, yellow, or red
-    private fun evaluateColor(request: IRequestInfo?, response: IResponseInfo?): Color? {
-
-        var acac = false
-        var acao = false
-        var origin: String? = null
-
-        // get origin
-        for(reqHeader in request!!.headers){
-            if(reqHeader.startsWith("Origin:", ignoreCase=true)){
-                origin = reqHeader.substringAfter(":")
-            }
-        }
-
-
-        // check if ACAC and/or ACAO are set
-        for(respHeader in response!!.headers){
-             if(respHeader.contains("Access-Control-Allow-Credentials: true", ignoreCase = true)){
-                 acac = true
-             } else if(origin != null && respHeader.replace(" ", "").contains("Access-Control-Allow-Origin: $origin".replace(" ", ""), ignoreCase = true)) {
-                 acao = true
-             }
-        }
-
-
-
-        return if(acac && acao){
-            Color.RED
-        }else if(acao){
-            Color.YELLOW
-        } else {
-            null
-        }
-    }
 
 
 
 
-    private fun getTitle(response: ByteArray?): String {
-        if (response == null) return ""
-        val html = callbacks.helpers.bytesToString(response)
-        val titleRegex = "<title>(.*?)</title>".toRegex()
-        val title = titleRegex.find(html)?.value ?: ""
-        return title.removePrefix("<title>").removeSuffix("</title>")
-    }
 
     private fun repeatRequest() {
         model.refreshCors()
 
         GlobalScope.launch(Dispatchers.IO) {
-
-
-
 
             val requestResponse = try {
                 callbacks.makeHttpRequest(messageEditor.httpService, requestViewer?.message)
@@ -290,7 +188,7 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
                 SwingUtilities.invokeLater {
                     for(request in requests) {
                         responseViewer?.setMessage(request.response ?: ByteArray(0), false)
-                        createCors(request)
+                        createCors(request, Color.ORANGE)// TODO: create func
                     }
                 }
             }

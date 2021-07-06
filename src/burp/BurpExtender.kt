@@ -26,5 +26,7 @@ class BurpExtender : IBurpExtender {
         callbacks.registerContextMenuFactory(menuItem)
         // init a new HTTP listener
         callbacks.registerHttpListener(HttpListener(callbacks, table))
+
+        //callbacks.registerScannerCheck(this) // TODO: needs some work to see if this is doable
     }
 }
