@@ -13,6 +13,10 @@ import javax.swing.SwingUtilities
 // implement interceptor and modify requests
 class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val table: CorsPanel): IHttpListener {
     override fun processHttpMessage(toolFlag: Int, messageIsRequest: Boolean, messageInfo: IHttpRequestResponse) {
+        // only intercept proxy requests
+        if(toolFlag != IBurpExtenderCallbacks.TOOL_PROXY){
+            return
+        }
 
         val stdout = PrintWriter(callbacks.stdout, true)
         val analyzedRequest = callbacks.helpers.analyzeRequest(messageInfo)
@@ -41,42 +45,40 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
             }
         }
 
-        // avoid infinite loop -> ignore extension requests
-        if(toolFlag == IBurpExtenderCallbacks.TOOL_PROXY){
 
-            // ignore if out of scope request and only in scope button selected
-            if(table.corsOptions.inScope.isSelected && callbacks.isInScope(analyzedRequest.url) || !table.corsOptions.inScope.isSelected){
 
-                // add original request
-                requests.add(messageInfo)
+        // ignore if out of scope request and only in scope button selected
+        if(table.corsOptions.inScope.isSelected && callbacks.isInScope(analyzedRequest.url) || !table.corsOptions.inScope.isSelected){
 
-                // add all cors requests
-                val url = table.corsOptions.urlTextField.text
-                val helper = CorsHelper(callbacks, url)
-                requests.addAll(helper.generateCorsRequests(messageInfo))
+            // add original request
+            requests.add(messageInfo)
 
-                for(req in requests){
-                    val color = evaluateColor(req)
-                    colors.add(color)
-                    if(color != null){
-                        generateIssue(color, req, analyzedRequest)
-                    }
+            // add all cors requests
+            val url = table.corsOptions.urlTextField.text
+            val helper = CorsHelper(callbacks, url)
+            requests.addAll(helper.generateCorsRequests(messageInfo))
+
+            for(req in requests){
+                val color = evaluateColor(req)
+                colors.add(color)
+                if(color != null){
+                    generateIssue(color, req, analyzedRequest)
                 }
             }
-            // process responses
-            if (!messageIsRequest){
-                table.addCorsRequestToTable(requests.toTypedArray(), colors.toTypedArray())
-            }
         }
+        // process responses
+        if (!messageIsRequest){
+            table.addCorsRequestToTable(requests.toTypedArray(), colors.toTypedArray())
+        }
+
 
 
     }
 
     private fun generateIssue(color: Color, requestResponse: IHttpRequestResponse, analyzedRequest: IRequestInfo) {
         var detail = ""
-        val analyzedRequest = this.callbacks.helpers?.analyzeRequest(requestResponse)
         val message = Array<IHttpRequestResponse>(1){requestResponse}
-        for(reqHeader in analyzedRequest!!.headers) {
+        for(reqHeader in analyzedRequest.headers) {
             if (reqHeader.startsWith("Origin:", ignoreCase = true)) {
                 detail = reqHeader
             }
