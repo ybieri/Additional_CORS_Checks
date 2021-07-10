@@ -1,14 +1,9 @@
 package burp
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.swing.Swing
-import kotlinx.coroutines.withContext
+
 import java.awt.Color
-import java.io.PrintWriter
 import java.util.*
-import javax.swing.SwingUtilities
+
 
 // implement interceptor and modify requests
 class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val table: CorsPanel): IHttpListener {
@@ -18,11 +13,10 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
             return
         }
 
-        val stdout = PrintWriter(callbacks.stdout, true)
         val analyzedRequest = callbacks.helpers.analyzeRequest(messageInfo)
 
-        var requests = ArrayList<IHttpRequestResponse>()
-        var colors = ArrayList<Color?>()
+        val requests = ArrayList<IHttpRequestResponse>()
+        val colors = ArrayList<Color?>()
 
         // if deactivated, don't perform any actions
         if(!table.corsOptions.isActive.isSelected){
@@ -77,7 +71,7 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
 
     private fun generateIssue(color: Color, requestResponse: IHttpRequestResponse, analyzedRequest: IRequestInfo) {
         var detail = ""
-        val message = Array<IHttpRequestResponse>(1){requestResponse}
+        val message = Array(1){requestResponse}
         for(reqHeader in analyzedRequest.headers) {
             if (reqHeader.startsWith("Origin:", ignoreCase = true)) {
                 detail = reqHeader

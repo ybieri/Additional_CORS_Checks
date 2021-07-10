@@ -62,9 +62,8 @@ class CorsActions(
                             var title = "title"
                             if (title.length > 10) {
                                 title = title.substring(0, 9) + "+"
-                            } else if (title.isBlank()) {
-                                //title = "[^](${panel.bookmarks.indexOf(selectedBookmark)}"
                             }
+
                             callbacks.sendToRepeater(
                                 url.host,
                                 url.port,
@@ -89,7 +88,7 @@ class CorsActions(
 
 
 
-    fun getSelectedCors(): MutableList<CorsObj> {
+    private fun getSelectedCors(): MutableList<CorsObj> {
         val selectedBookmarks: MutableList<CorsObj> = ArrayList()
         for (index in table.selectedRows) {
             val row = panel.rowSorter.convertRowIndexToModel(index)

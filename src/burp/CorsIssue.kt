@@ -1,6 +1,6 @@
 package burp
 
-import java.io.PrintWriter
+
 import java.net.URL
 
 internal class CorsIssue(
@@ -57,11 +57,4 @@ internal class CorsIssue(
     override fun getHttpService(): IHttpService {
         return httpService
     }
-
-    val host: String?
-        get() = null
-    val port: Int
-        get() = 0
-    val protocol: String?
-        get() = null
 }

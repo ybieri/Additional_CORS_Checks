@@ -8,7 +8,6 @@ import kotlinx.coroutines.withContext
 import java.awt.Color
 import java.awt.Component
 import java.awt.FlowLayout
-import java.io.PrintWriter
 import java.net.URL
 import javax.swing.*
 import javax.swing.table.AbstractTableModel
@@ -35,8 +34,8 @@ data class CorsObj(
 )
 
 class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
-    val corsOptions = CorsOptions(this, callbacks)
-    val model = CorsModel(corsOptions)
+    val corsOptions = CorsOptions(this)
+    val model = CorsModel()
     val table = JTable(model)
 
     private val messageEditor = MessageEditor(callbacks)
@@ -134,7 +133,6 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
     private fun createCors(
         requestResponse: IHttpRequestResponse, color: Color?
     ) {
-        val stdout = PrintWriter(callbacks.stdout, true)
 
         val savedRequestResponse = callbacks.saveBuffersToTempFiles(requestResponse)
         val requestInfo = callbacks.helpers.analyzeRequest(requestResponse)
@@ -202,14 +200,14 @@ class MessageEditor(callbacks: IBurpExtenderCallbacks) : IMessageEditorControlle
     val requestViewer: IMessageEditor? = callbacks.createMessageEditor(this, true)
     val responseViewer: IMessageEditor? = callbacks.createMessageEditor(this, false)
 
-    override fun getResponse(): ByteArray? = requestResponse?.response ?: ByteArray(0)
+    override fun getResponse(): ByteArray = requestResponse?.response ?: ByteArray(0)
 
     override fun getRequest(): ByteArray? = requestResponse?.request
 
     override fun getHttpService(): IHttpService? = requestResponse?.httpService
 }
 
-class CorsModel(private val corsOptions: CorsOptions) : AbstractTableModel() {
+class CorsModel : AbstractTableModel() {
     private val columns =
         listOf(
             "ID",
@@ -220,7 +218,7 @@ class CorsModel(private val corsOptions: CorsOptions) : AbstractTableModel() {
             "Length",
             "MIME"
         )
-    var corsObjArr: MutableList<CorsObj> = ArrayList()
+    private var corsObjArr: MutableList<CorsObj> = ArrayList()
     var displayedCors: MutableList<CorsObj> = ArrayList()
         private set
 
@@ -262,7 +260,7 @@ class CorsModel(private val corsOptions: CorsOptions) : AbstractTableModel() {
     }
 
     override fun isCellEditable(rowIndex: Int, columnIndex: Int): Boolean {
-        return false;
+        return false
     }
     /*
     override fun setValueAt(value: Any?, rowIndex: Int, colIndex: Int) {
@@ -279,11 +277,6 @@ class CorsModel(private val corsOptions: CorsOptions) : AbstractTableModel() {
         refreshCors()
     }
 
-    fun removeCors(selectedCors: MutableList<CorsObj>) {
-        corsObjArr.removeAll(selectedCors)
-        refreshCors()
-    }
-
     fun clearCors() {
         corsObjArr.clear()
         refreshCors()
@@ -297,7 +290,7 @@ class CorsModel(private val corsOptions: CorsOptions) : AbstractTableModel() {
         return corsObjArr[row].color
     }
 
-    fun setColor(row: Int, color: Color){
+    private fun setColor(row: Int, color: Color){
         corsObjArr[row].color = color
     }
 

@@ -1,3 +1,5 @@
+@file:Suppress("ObjectPropertyName", "ObjectPropertyName", "ObjectPropertyName")
+
 package burp
 
 import java.util.*
@@ -7,7 +9,7 @@ class CorsHelper(private val callbacks: IBurpExtenderCallbacks, private val url:
 
     private fun cloneIHttpRequestResponse(
         originalRequestResponse: IHttpRequestResponse
-    ): IHttpRequestResponse? {
+    ): IHttpRequestResponse {
         return object : IHttpRequestResponse {
             var _request = originalRequestResponse.request
             var _response = originalRequestResponse.response
@@ -58,7 +60,7 @@ class CorsHelper(private val callbacks: IBurpExtenderCallbacks, private val url:
 
     // create array of all Origin header modifications
     private fun corsHeaders(URL: String, BASE_URL: String): Collection<String>{
-        var corsHeaderArr = ArrayList<String>()
+        val corsHeaderArr = ArrayList<String>()
         corsHeaderArr.add("Origin: https://$URL") // arbitrary reflection
         corsHeaderArr.add("Origin: http://$BASE_URL")  // trust HTTP
         corsHeaderArr.add("Origin: null") // null origin
@@ -80,7 +82,7 @@ class CorsHelper(private val callbacks: IBurpExtenderCallbacks, private val url:
 
     // wrapper to generatecors headrs and execute requests
     fun generateCorsRequests(messageInfo: IHttpRequestResponse): Collection<IHttpRequestResponse> {
-        var corsRequests = ArrayList<IHttpRequestResponse>()
+        val corsRequests = ArrayList<IHttpRequestResponse>()
 
         val analyzedRequest = callbacks.helpers.analyzeRequest(messageInfo)
 
