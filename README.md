@@ -23,6 +23,15 @@ CORSair has two modes to detect CORS misconfigurations: automatic and manual.
 
 ![Issue](https://github.com/ybieri/CORSair/blob/master/doc/issue.png)
 
+### Manual
+* Requests can be added to CORSair using the extension menu.
+
+![Add to corsair](https://github.com/ybieri/CORSair/blob/master/doc/add_to_corsair.png)
+
+* The requests to test for CORS misconfigurtaion can then be sent using the `Send CORS requests for selected entry` button.
+
+![Send requests](https://github.com/ybieri/CORSair/blob/master/doc/send_requests.png)
+
 ## Installation
 ### Manual Installation
 Start the Burp Suite and click at the Extender tab on Add. Choose the CORSair JAR file to install the extension.
