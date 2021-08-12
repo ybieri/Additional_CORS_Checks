@@ -16,7 +16,12 @@ CORSair has two modes to detect CORS misconfigurations: automatic and manual.
 
 * If a potential misconfiguration is discovered, the request is highlighted in red (see request #3 above). 
 * The request here does reflect the `null` origin and has `Access-Control-Allow-Credentials: true` set.
+
 ![Null origin reflected](https://github.com/ybieri/CORSair/blob/master/doc/null_origin.png)
+
+* If an issue is detected, it is also reported in `Target` and `Dashboard` tabs.
+
+![Issue](https://github.com/ybieri/CORSair/blob/master/doc/issue.png)
 
 ## Installation
 ### Manual Installation
