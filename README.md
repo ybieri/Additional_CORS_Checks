@@ -34,10 +34,10 @@ CORSair has two modes to detect CORS misconfigurations: automatic and manual.
 
 ## Installation
 ### Manual Installation
-Start the Burp Suite and click at the Extender tab on Add. Choose the CORSair JAR file to install the extension.
+Start Burp and navigate to the `Extender` tab, `Extensions`, `Add`. Choose the `CORSair` JAR file to install the extension.
 
 ### Installation from BApp Store
-The easy way to install CORSair is using the BApp Store. Open Burp and click in the Extender tab on the BApp Store tab. Select CORSair and hit the Install button to install the extension.
+The easy way to install CORSair is using the BApp Store. Open Burp and navigate to the `Extender` tab, then to the` BApp Store` tab. Select `CORSair` and hit the `Install` button to install the extension.
 
 ## Author
 * Yves Bieri (Github: [ybieri](https://github.com/ybieri), Twitter: [yves_bieri](https://twitter.com/yves_bieri))
