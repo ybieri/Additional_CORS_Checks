@@ -17,8 +17,8 @@ class CorsOptions(
 
 
     init {
-        val clearButton = JButton("Clear CORS Requests")
-        val urlTextLabel = JLabel("URL for CORS Requests:")
+        val clearButton = JButton("Clear CORS requests")
+        val urlTextLabel = JLabel("URL for CORS requests:")
 
         clearButton.addActionListener { clearCors() }
         configPanel.add(urlTextLabel)
