@@ -59,7 +59,7 @@ class CorsHelper(private val callbacks: IBurpExtenderCallbacks, private val url:
     }
 
     // create array of all Origin header modifications
-    private fun corsHeaders(URL: String, BASE_URL: String): Collection<String>{
+    private fun corsHeaders(URL: String, BASE_URL: String): Collection<String> {
         val corsHeaderArr = ArrayList<String>()
         corsHeaderArr.add("Origin: https://$URL") // arbitrary reflection
         corsHeaderArr.add("Origin: http://$BASE_URL")  // trust HTTP
@@ -71,7 +71,7 @@ class CorsHelper(private val callbacks: IBurpExtenderCallbacks, private val url:
         corsHeaderArr.add("Origin: https://$BASE_URL" + "_$URL") // underscope bypass https://www.corben.io/advanced-cors-techniques/ example.com_.evil.com
 
         // dot not escaped
-        if(BASE_URL.count{"." in BASE_URL} > 1){
+        if (BASE_URL.count { "." in BASE_URL } > 1) {
             val lastindex = BASE_URL.lastIndexOf(".")
             val url = BASE_URL.substring(0, lastindex).replace(".", "x") + BASE_URL.substring(lastindex)
             corsHeaderArr.add("Origin: https://$url")  // www.example.com -> wwwexample.com
@@ -88,7 +88,7 @@ class CorsHelper(private val callbacks: IBurpExtenderCallbacks, private val url:
 
         val baseUrl = messageInfo.httpService.host
 
-        for(corsHeader in corsHeaders(url, baseUrl)) {
+        for (corsHeader in corsHeaders(url, baseUrl)) {
             val newReq = cloneIHttpRequestResponse(messageInfo)
             performCorsRequests(newReq, corsHeader, analyzedRequest)?.let { corsRequests.add(it) }
         }
@@ -114,10 +114,10 @@ class CorsHelper(private val callbacks: IBurpExtenderCallbacks, private val url:
 
     private fun generateNewHeaders(headers: List<String>, corsHeader: String): ArrayList<String> {
 
-            //check if origin header already present
+        //check if origin header already present
         val newHeaders = ArrayList<String>()
-        for(header in headers){
-            if(!header.contains("Origin:")){
+        for (header in headers) {
+            if (!header.contains("Origin:")) {
                 newHeaders.add(header)
             }
         }

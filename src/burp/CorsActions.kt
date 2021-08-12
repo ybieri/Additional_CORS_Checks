@@ -8,7 +8,6 @@ import java.awt.event.ActionListener
 import java.util.*
 import javax.swing.JMenuItem
 import javax.swing.JPopupMenu
-import kotlin.collections.ArrayList
 
 class CorsActions(
     private val panel: CorsPanel,
@@ -84,8 +83,6 @@ class CorsActions(
             }
         }
     }
-
-
 
 
     private fun getSelectedCors(): MutableList<CorsObj> {

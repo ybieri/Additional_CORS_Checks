@@ -2,14 +2,13 @@ package burp
 
 
 import java.awt.Color
-import java.util.*
 
 
 // implement interceptor and modify requests
-class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val table: CorsPanel): IHttpListener {
+class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val table: CorsPanel) : IHttpListener {
     override fun processHttpMessage(toolFlag: Int, messageIsRequest: Boolean, messageInfo: IHttpRequestResponse) {
         // only intercept proxy requests
-        if(toolFlag != IBurpExtenderCallbacks.TOOL_PROXY){
+        if (toolFlag != IBurpExtenderCallbacks.TOOL_PROXY) {
             return
         }
 
@@ -19,7 +18,7 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
         val colors = ArrayList<Color?>()
 
         // if deactivated, don't perform any actions
-        if(!table.corsOptions.isActive.isSelected){
+        if (!table.corsOptions.isActive.isSelected) {
             return
         }
 
@@ -28,21 +27,20 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
 
             // ignore JS and images if box is checked
             val ignoredMime = arrayOf("script", "PNG", "JPEG", "CSS")
-            val extensions = table.corsOptions.ignoreExtension.text.replace(" ","").split(",").toTypedArray()
+            val extensions = table.corsOptions.ignoreExtension.text.replace(" ", "").split(",").toTypedArray()
 
-            if(analyzedRequest.url.path.substringAfterLast(".").lowercase() in extensions){
+            if (analyzedRequest.url.path.substringAfterLast(".").lowercase() in extensions) {
                 return
             }
 
-            if (table.corsOptions.ignoreJSAndImages.isSelected && analyzedResponse.statedMimeType in ignoredMime){
+            if (table.corsOptions.ignoreJSAndImages.isSelected && analyzedResponse.statedMimeType in ignoredMime) {
                 return
             }
         }
 
 
-
         // ignore if out of scope request and only in scope button selected
-        if(table.corsOptions.inScope.isSelected && callbacks.isInScope(analyzedRequest.url) || !table.corsOptions.inScope.isSelected){
+        if (table.corsOptions.inScope.isSelected && callbacks.isInScope(analyzedRequest.url) || !table.corsOptions.inScope.isSelected) {
 
             // add original request
             requests.add(messageInfo)
@@ -52,33 +50,32 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
             val helper = CorsHelper(callbacks, url)
             requests.addAll(helper.generateCorsRequests(messageInfo))
 
-            for(req in requests){
+            for (req in requests) {
                 val color = evaluateColor(req)
                 colors.add(color)
-                if(color != null){
+                if (color != null) {
                     generateIssue(color, req, analyzedRequest)
                 }
             }
         }
         // process responses
-        if (!messageIsRequest){
+        if (!messageIsRequest) {
             table.addCorsRequestToTable(requests.toTypedArray(), colors.toTypedArray())
         }
-
 
 
     }
 
     private fun generateIssue(color: Color, requestResponse: IHttpRequestResponse, analyzedRequest: IRequestInfo) {
         var detail = ""
-        val message = Array(1){requestResponse}
-        for(reqHeader in analyzedRequest.headers) {
+        val message = Array(1) { requestResponse }
+        for (reqHeader in analyzedRequest.headers) {
             if (reqHeader.startsWith("Origin:", ignoreCase = true)) {
                 detail = reqHeader
             }
         }
 
-        if(color == Color.RED){
+        if (color == Color.RED) {
             val corsIssue = CorsIssue(
                 requestResponse.httpService,
                 analyzedRequest.url,
@@ -90,7 +87,7 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
                 "Rather than programmatically verifying supplied origins, use a whitelist of trusted domains."
             )
             callbacks.addScanIssue(corsIssue)
-        } else if (color == Color.YELLOW){
+        } else if (color == Color.YELLOW) {
             val corsIssue = CorsIssue(
                 requestResponse.httpService,
                 analyzedRequest.url,
@@ -115,24 +112,26 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
         var origin: String? = null
 
         // get origin
-        for(reqHeader in request!!.headers){
-            if(reqHeader.startsWith("Origin:", ignoreCase=true)){
+        for (reqHeader in request!!.headers) {
+            if (reqHeader.startsWith("Origin:", ignoreCase = true)) {
                 origin = reqHeader.substringAfter(":")
             }
         }
 
         // check if ACAC and/or ACAO are set
-        for(respHeader in response!!.headers){
-            if(respHeader.contains("Access-Control-Allow-Credentials: true", ignoreCase = true)){
+        for (respHeader in response!!.headers) {
+            if (respHeader.contains("Access-Control-Allow-Credentials: true", ignoreCase = true)) {
                 acac = true
-            } else if(origin != null && respHeader.replace(" ", "").contains("Access-Control-Allow-Origin: $origin".replace(" ", ""), ignoreCase = true)) {
+            } else if (origin != null && respHeader.replace(" ", "")
+                    .contains("Access-Control-Allow-Origin: $origin".replace(" ", ""), ignoreCase = true)
+            ) {
                 acao = true
             }
         }
 
-        return if(acac && acao){
+        return if (acac && acao) {
             Color.RED
-        }else if(acao){
+        } else if (acao) {
             Color.YELLOW
         } else {
             null

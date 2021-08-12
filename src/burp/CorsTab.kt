@@ -62,7 +62,7 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
                 column: Int
             ): Component {
                 val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
-                if(!isSelected) {
+                if (!isSelected) {
                     c.background = model.getColor(row)
                 }
                 return c
@@ -121,9 +121,6 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
     }
 
 
-
-
-
     fun addCorsRequestToTable(requestsResponses: Array<IHttpRequestResponse>, colors: Array<Color?>) {
         for (i in requestsResponses.indices) {
             createCors(requestsResponses[i], colors[i])
@@ -145,7 +142,7 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
         val url = requestInfo.url
         val method = requestInfo?.method ?: ""
         val statusCode = response?.statusCode?.toString() ?: ""
-        val length = requestResponse.response?.size?.toString() ?:""
+        val length = requestResponse.response?.size?.toString() ?: ""
         val mimeType = response?.inferredMimeType ?: ""
 
         val cors = CorsObj(
@@ -161,10 +158,6 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
         model.addCors(cors)
 
     }
-
-
-
-
 
 
     private fun repeatRequest() {
@@ -184,7 +177,7 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
 
             withContext(Dispatchers.Swing) {
                 SwingUtilities.invokeLater {
-                    for(request in requests) {
+                    for (request in requests) {
                         responseViewer?.setMessage(request.response ?: ByteArray(0), false)
                         createCors(request, Color.ORANGE)// TODO: create func
                     }
@@ -290,7 +283,7 @@ class CorsModel : AbstractTableModel() {
         return corsObjArr[row].color
     }
 
-    private fun setColor(row: Int, color: Color){
+    private fun setColor(row: Int, color: Color) {
         corsObjArr[row].color = color
     }
 

@@ -38,7 +38,6 @@ class CorsOptions(
     }
 
 
-
     private fun clearCors() {
         corsPanel.model.clearCors()
         corsPanel.requestViewer?.setMessage(ByteArray(0), true)
