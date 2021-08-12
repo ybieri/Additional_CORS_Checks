@@ -1,0 +1,29 @@
+# Burp Extension: CORSair
+## Description
+This extension can be used to test websites for CORS misconfigurations.It was written to speed-up testing of CORS misconfigurations and to not miss more tricky misconfigurations.
+It can spot trivial misconfigurations like arbitrary origin reflection, but also more sublte ones where a regex is not properly configured.
+
+## Features
+CORSair has two modes to detect CORS misconfigurations: automatic and manual.
+
+### Automatic
+* In the CORSair tab, the extension can be activated.
+* If activated, the extension will test CORS misconfigurations for each proxy request by sending multiple requests with different origins.
+* There are options to only endable it for in-scope items and to exclude requests with certain file extensions.
+* The `URL for CORS Request` is used to test for arbitrary reflection and as prefix/suffix in testing regex misconfigurations.
+
+![Arbitrary origin reflected](https://github.com/ybieri/CORSair/blob/master/doc/arbitrary_origin.png)
+
+* If a potential misconfiguration is discovered, the request is highlighted in red (see request #3 above). 
+* The request here does reflect the `null` origin and has `Access-Control-Allow-Credentials: true` set.
+![Null origin reflected](https://github.com/ybieri/CORSair/blob/master/doc/null_origin.png)
+
+## Installation
+### Manual Installation
+Start the Burp Suite and click at the Extender tab on Add. Choose the CORSair JAR file to install the extension.
+
+### Installation from BApp Store
+The easy way to install CORSair is using the BApp Store. Open Burp and click in the Extender tab on the BApp Store tab. Select CORSair and hit the Install button to install the extension.
+
+## Author
+* Yves Bieri (Github: [ybieri](https://github.com/ybieri), Twitter: [yves_bieri](https://twitter.com/yves_bieri))
