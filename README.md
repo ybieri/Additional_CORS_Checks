@@ -28,7 +28,7 @@ CORSair has two modes to detect CORS misconfigurations: automatic and manual.
 
 ![Add to corsair](https://github.com/ybieri/CORSair/blob/master/doc/add_to_corsair.png)
 
-* The requests to test for CORS misconfigurtaion can then be sent using the `Send CORS requests for selected entry` button.
+* The requests to test for CORS misconfiguration can then be sent using the `Send CORS requests for selected entry` button.
 
 ![Send requests](https://github.com/ybieri/CORSair/blob/master/doc/send_requests.png)
 
