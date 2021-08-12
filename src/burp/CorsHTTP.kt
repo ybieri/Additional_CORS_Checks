@@ -2,6 +2,8 @@ package burp
 
 
 import java.awt.Color
+import java.io.PrintWriter
+import java.net.URL
 
 
 // implement interceptor and modify requests
@@ -13,7 +15,6 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
         }
 
         val analyzedRequest = callbacks.helpers.analyzeRequest(messageInfo)
-
         val requests = ArrayList<IHttpRequestResponse>()
         val colors = ArrayList<Color?>()
 
@@ -23,20 +24,15 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
         }
 
         if (!messageIsRequest) {
-            val analyzedResponse = callbacks.helpers.analyzeResponse(messageInfo.response)
-
-            // ignore JS and images if box is checked
-            val ignoredMime = arrayOf("script", "PNG", "JPEG", "CSS")
-            val extensions = table.corsOptions.ignoreExtension.text.replace(" ", "").split(",").toTypedArray()
-
-            if (analyzedRequest.url.path.substringAfterLast(".").lowercase() in extensions) {
-                return
-            }
-
-            if (table.corsOptions.ignoreJSAndImages.isSelected && analyzedResponse.statedMimeType in ignoredMime) {
-                return
-            }
+            return
         }
+
+        // ignore extensions specified if box is checked
+        val extensions = table.corsOptions.ignoreExtension.text.replace(" ", "").split(",").toTypedArray()
+        if (analyzedRequest.url.path.substringAfterLast(".").lowercase() in extensions) {
+            return
+        }
+
 
 
         // ignore if out of scope request and only in scope button selected
@@ -50,11 +46,14 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
             val helper = CorsHelper(callbacks, url)
             requests.addAll(helper.generateCorsRequests(messageInfo))
 
+            val stdout = PrintWriter(callbacks.stdout, true)
+            stdout.println("Len: ${requests.size}")
+
             for (req in requests) {
                 val color = evaluateColor(req)
                 colors.add(color)
                 if (color != null) {
-                    generateIssue(color, req, analyzedRequest)
+                    generateIssue(color, req, analyzedRequest.url)
                 }
             }
         }
@@ -66,22 +65,25 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
 
     }
 
-    private fun generateIssue(color: Color, requestResponse: IHttpRequestResponse, analyzedRequest: IRequestInfo) {
-        var detail = ""
+    private fun generateIssue(color: Color, requestResponse: IHttpRequestResponse, url: URL) {
+        val response = callbacks.helpers.analyzeResponse(requestResponse.response)
+
+        var detail : String? = ""
         val message = Array(1) { requestResponse }
-        for (reqHeader in analyzedRequest.headers) {
-            if (reqHeader.startsWith("Origin:", ignoreCase = true)) {
-                detail = reqHeader
+        for (respHeader in response.headers) {
+            if (respHeader.startsWith("Access-Control-Allow-Origin:", ignoreCase = true)) {
+                detail = respHeader.split(":")[1].trim()
             }
         }
+
 
         if (color == Color.RED) {
             val corsIssue = CorsIssue(
                 requestResponse.httpService,
-                analyzedRequest.url,
+                url,
                 message,
-                "CORSAir: Cross-origin resource sharing issue",
-                "The following Origin header was reflected: <b>\"$detail\"</b>.<br>Additionally, \"Access-Control-Allow-Credentials: true\" was set.",
+                "CORSair: Cross-origin resource sharing issue",
+                "The following Origin was reflected: <b>\"$detail\"</b>.<br>Additionally, <b>\"Access-Control-Allow-Credentials: true\"</b> was set.",
                 "High",
                 "Certain",
                 "Rather than programmatically verifying supplied origins, use a whitelist of trusted domains."
@@ -90,10 +92,10 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
         } else if (color == Color.YELLOW) {
             val corsIssue = CorsIssue(
                 requestResponse.httpService,
-                analyzedRequest.url,
+                url,
                 message,
-                "CORSAir: Cross-origin resource sharing issue",
-                "The following Origin header was reflected: <b>\"$detail\"</b>.<br>But, \"Access-Control-Allow-Credentials: true\" was NOT set.",
+                "CORSair: Cross-origin resource sharing issue",
+                "The following Origin was reflected: <b>\"$detail\"</b>.<br>But, <b>\"Access-Control-Allow-Credentials: true\"<b> was <b>NOT</b> set.",
                 "Low",
                 "Certain",
                 "Rather than programmatically verifying supplied origins, use a whitelist of trusted domains."
@@ -105,7 +107,13 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
     // returns color of a response
     private fun evaluateColor(requestResponse: IHttpRequestResponse): Color? {
         val request = callbacks.helpers.analyzeRequest(requestResponse.request)
-        val response = callbacks.helpers.analyzeResponse(requestResponse.response)
+
+        // the response can be null. If so, ignore.
+        if(requestResponse.response == null) {
+            return null
+        }
+
+        val response: IResponseInfo? = callbacks.helpers.analyzeResponse(requestResponse.response)
 
         var acac = false
         var acao = false

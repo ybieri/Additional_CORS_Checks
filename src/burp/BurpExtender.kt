@@ -10,7 +10,6 @@ class BurpExtender : IBurpExtender {
     override fun registerExtenderCallbacks(callbacks: IBurpExtenderCallbacks) {
         // Let's wrap stdout and stderr in PrintWriter with auto flush
         val stdout = PrintWriter(callbacks.stdout, true)
-        //val stderr = PrintWriter(callbacks.stderr, true)
 
         //this.callbacks = callbacks
         val tab = CorsTab(callbacks)
@@ -18,8 +17,8 @@ class BurpExtender : IBurpExtender {
         val menuItem = CorsMenu(table)
         HttpListener(callbacks, table)
 
-        callbacks.setExtensionName("CORSAir")
-        stdout.println("CORSAir loaded!")
+        callbacks.setExtensionName("CORSair")
+        stdout.println("CORSair loaded!")
 
         // create new Burp tab
         callbacks.addSuiteTab(tab)
@@ -27,7 +26,5 @@ class BurpExtender : IBurpExtender {
         callbacks.registerContextMenuFactory(menuItem)
         // init a new HTTP listener
         callbacks.registerHttpListener(HttpListener(callbacks, table))
-
-        //callbacks.registerScannerCheck(this) // TODO: needs some work to see if this is doable
     }
 }
