@@ -2,6 +2,7 @@
 
 package burp
 
+import java.awt.Color
 import java.util.*
 
 class CorsHelper(private val callbacks: IBurpExtenderCallbacks, private val url: String) {
@@ -123,5 +124,47 @@ class CorsHelper(private val callbacks: IBurpExtenderCallbacks, private val url:
         }
         newHeaders.add(corsHeader)
         return newHeaders
+    }
+
+    // returns color of a response
+    fun evaluateColor(requestResponse: IHttpRequestResponse): Color? {
+        val request = callbacks.helpers.analyzeRequest(requestResponse.request)
+
+        // the response can be null. If so, ignore.
+        if(requestResponse.response == null) {
+            return null
+        }
+
+        val response: IResponseInfo? = callbacks.helpers.analyzeResponse(requestResponse.response)
+
+        var acac = false
+        var acao = false
+        var origin: String? = null
+
+        // get origin
+        for (reqHeader in request!!.headers) {
+            if (reqHeader.startsWith("Origin:", ignoreCase = true)) {
+                origin = reqHeader.substringAfter(":")
+            }
+        }
+
+        // check if ACAC and/or ACAO are set
+        for (respHeader in response!!.headers) {
+            if (respHeader.contains("Access-Control-Allow-Credentials: true", ignoreCase = true)) {
+                acac = true
+            } else if (origin != null && respHeader.replace(" ", "")
+                    .contains("Access-Control-Allow-Origin: $origin".replace(" ", ""), ignoreCase = true)
+            ) {
+                acao = true
+            }
+        }
+
+        return if (acac && acao) {
+            Color.RED
+        } else if (acao) {
+            Color.YELLOW
+        } else {
+            null
+        }
     }
 }

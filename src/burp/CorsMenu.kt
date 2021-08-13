@@ -7,7 +7,7 @@ class CorsMenu(private val table: CorsPanel) : IContextMenuFactory {
     override fun createMenuItems(invocation: IContextMenuInvocation?): MutableList<JMenuItem> {
         val menuItems: MutableList<JMenuItem> = arrayListOf()
         val requests = invocation?.selectedMessages
-        val corsButton = JMenuItem("Add Requests to CORSair")
+        val corsButton = JMenuItem("Add Requests to CORSAir")
         val colors = Array<Color?>(requests!!.size) { _ -> null }
 
         corsButton.addActionListener {

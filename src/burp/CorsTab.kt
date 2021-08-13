@@ -179,7 +179,8 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
                 SwingUtilities.invokeLater {
                     for (request in requests) {
                         responseViewer?.setMessage(request.response ?: ByteArray(0), false)
-                        createCors(request, Color.ORANGE)// TODO: create func
+                        val color = helper.evaluateColor(request)
+                        createCors(request, color)
                     }
                 }
             }
