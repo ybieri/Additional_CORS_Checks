@@ -47,8 +47,6 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
 
     private val repeatInTable = JCheckBox("Add repeated request to table")
 
-    //serious TODO:
-
     init {
 
         // black magic with Java Tables
@@ -224,7 +222,6 @@ class CorsModel : AbstractTableModel() {
         return columns[column]
     }
 
-    //TODO change
     override fun getColumnClass(columnIndex: Int): Class<*> {
         return when (columnIndex) {
             0 -> java.lang.Integer::class.java
