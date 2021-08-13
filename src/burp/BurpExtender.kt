@@ -8,8 +8,7 @@ class BurpExtender : IBurpExtender {
 
 
     override fun registerExtenderCallbacks(callbacks: IBurpExtenderCallbacks) {
-        // Let's wrap stdout and stderr in PrintWriter with auto flush
-        val stdout = PrintWriter(callbacks.stdout, true)
+
 
         //this.callbacks = callbacks
         val tab = CorsTab(callbacks)
@@ -18,6 +17,7 @@ class BurpExtender : IBurpExtender {
         HttpListener(callbacks, table)
 
         callbacks.setExtensionName("CORSair")
+        val stdout = PrintWriter(callbacks.stdout, true)
         stdout.println("CORSair loaded!")
 
         // create new Burp tab

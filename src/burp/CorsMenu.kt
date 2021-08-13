@@ -8,11 +8,13 @@ class CorsMenu(private val table: CorsPanel) : IContextMenuFactory {
         val menuItems: MutableList<JMenuItem> = arrayListOf()
         val requests = invocation?.selectedMessages
         val corsButton = JMenuItem("Add Requests to CORSAir")
-        val colors = Array<Color?>(requests!!.size) { _ -> null }
+        val colors = requests?.let { Array<Color?>(it.size) { _ -> null } }
 
         corsButton.addActionListener {
             table.model.refreshCors()
-            table.addCorsRequestToTable(requests, colors)
+            if (requests != null && colors != null) {
+                table.addCorsRequestToTable(requests, colors)
+            }
         }
 
         menuItems.add(corsButton)
