@@ -1,6 +1,6 @@
 # Burp Extension: CORSair
 ## Description
-This extension can be used to test websites for CORS misconfigurations.It was written to speed-up testing of CORS misconfigurations and to not miss more tricky misconfigurations.
+This extension can be used to test websites for CORS misconfigurations. 
 It can spot trivial misconfigurations like arbitrary origin reflection, but also more sublte ones where a regex is not properly configured.
 
 ## Features
