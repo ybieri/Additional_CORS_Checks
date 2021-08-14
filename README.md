@@ -2,9 +2,10 @@
 ## Description
 This extension can be used to test websites for CORS misconfigurations. 
 It can spot trivial misconfigurations like arbitrary origin reflection, but also more sublte ones where a regex is not properly configured (e.g. www.victim.com.attacker.com).
+An issue is created if a dangeours origin is reflected. If `Access-Control-Allow-Credentials: true` is also set, the issue is rated high, otherwise low. Finally, the user has to decide whether the reflected Origin is intended (e.g. CDN) or whether it is a security issue.
 
 ## Features
-CORSair has two modes to detect CORS misconfigurations: automatic and manual.
+CORSair can be run in either `automatic` or `manual` mode.
 
 ### Automatic
 * In the CORSair tab, the extension can be activated.
@@ -19,7 +20,7 @@ CORSair has two modes to detect CORS misconfigurations: automatic and manual.
 
 ![Null origin reflected](https://github.com/ybieri/CORSair/blob/master/doc/null_origin.png)
 
-* If an issue is detected, it is also reported in `Target` and `Dashboard` tabs.
+* If an issue is detected, it is also reported in the `Target` and `Dashboard` tabs.
 
 ![Issue](https://github.com/ybieri/CORSair/blob/master/doc/issue.png)
 
@@ -37,7 +38,7 @@ CORSair has two modes to detect CORS misconfigurations: automatic and manual.
 Start Burp and navigate to the `Extender` tab, `Extensions`, `Add`. Choose the [`CORSair`](https://github.com/ybieri/CORSair/blob/master/CORSair_v0.9.jar) JAR file to install the extension.
 
 ### Installation from BApp Store
-The easy way to install CORSair is using the BApp Store. Open Burp and navigate to the `Extender` tab, then to the` BApp Store` tab. Select `CORSair` and hit the `Install` button to install the extension.
+The easy way to install CORSair is using the BApp Store. Open Burp and navigate to the `Extender` tab, then to the `BApp Store` tab. Select `CORSair` and hit the `Install` button to install the extension.
 
 ## Author
 * Yves Bieri (Github: [ybieri](https://github.com/ybieri), Twitter: [yves_bieri](https://twitter.com/yves_bieri))
