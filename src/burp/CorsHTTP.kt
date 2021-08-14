@@ -2,7 +2,6 @@ package burp
 
 
 import java.awt.Color
-import java.io.PrintWriter
 import java.net.URL
 
 
@@ -57,38 +56,52 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
     private fun generateIssue(color: Color, requestResponse: IHttpRequestResponse, url: URL) {
         val response = callbacks.helpers.analyzeResponse(requestResponse.response)
 
-        var detail : String? = ""
+        var reflectedOrigin : String? = ""
         val message = Array(1) { requestResponse }
         for (respHeader in response.headers) {
             if (respHeader.startsWith("Access-Control-Allow-Origin:", ignoreCase = true)) {
-                detail = respHeader.substringAfter(":").trim()
+                reflectedOrigin = respHeader.substringAfter(":").trim()
             }
         }
 
+        // get current issues to avoid duplicates
+        val issues = callbacks.getScanIssues(url.protocol + "://" + url.host)
 
         if (color == Color.RED) {
+            val detail = "The following Origin was reflected: <b>\"$reflectedOrigin\"</b>.<br>Additionally, <b>\"Access-Control-Allow-Credentials: true\"</b> was set."
             val corsIssue = CorsIssue(
                 requestResponse.httpService,
                 url,
                 message,
                 "CORSair: Cross-origin resource sharing issue",
-                "The following Origin was reflected: <b>\"$detail\"</b>.<br>Additionally, <b>\"Access-Control-Allow-Credentials: true\"</b> was set.",
+                detail,
                 "High",
                 "Certain",
                 "Rather than programmatically verifying supplied origins, use a whitelist of trusted domains."
             )
+            for(issue in issues){
+                if(issue.issueDetail == detail){
+                    return
+                }
+            }
             callbacks.addScanIssue(corsIssue)
         } else if (color == Color.YELLOW) {
+            val detail = "The following Origin was reflected: <b>\"$reflectedOrigin\"</b>.<br>But, <b>\"Access-Control-Allow-Credentials: true\"<b> was <b>NOT</b> set."
             val corsIssue = CorsIssue(
                 requestResponse.httpService,
                 url,
                 message,
                 "CORSair: Cross-origin resource sharing issue",
-                "The following Origin was reflected: <b>\"$detail\"</b>.<br>But, <b>\"Access-Control-Allow-Credentials: true\"<b> was <b>NOT</b> set.",
+                detail,
                 "Low",
                 "Certain",
                 "Rather than programmatically verifying supplied origins, use a whitelist of trusted domains."
             )
+            for(issue in issues){
+                if(issue.issueDetail == detail){
+                    return
+                }
+            }
             callbacks.addScanIssue(corsIssue)
         }
     }

@@ -263,7 +263,7 @@ class CorsModel : AbstractTableModel() {
     fun addCors(corsObj: CorsObj) {
         corsObjArr.add(corsObj)
         displayedCors = corsObjArr
-        fireTableRowsInserted(displayedCors.lastIndex, displayedCors.lastIndex)
+        displayedCors?.let{fireTableRowsInserted(displayedCors.lastIndex, displayedCors.lastIndex)}
         corsObj.color?.let { setColor(displayedCors.lastIndex, it) }
         refreshCors()
     }
