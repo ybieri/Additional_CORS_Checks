@@ -8,6 +8,7 @@ import kotlinx.coroutines.withContext
 import java.awt.Color
 import java.awt.Component
 import java.awt.FlowLayout
+import java.io.PrintWriter
 import java.net.URL
 import javax.swing.*
 import javax.swing.table.AbstractTableModel
@@ -169,15 +170,16 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
                 RequestResponse(requestViewer?.message, null, messageEditor.httpService)
             }
 
-            val url = corsOptions.urlTextField.text
-            val helper = CorsHelper(callbacks, url)
+            val userUrl = corsOptions.urlTextField.text
+            val helper = CorsHelper(callbacks, userUrl)
             val requests = helper.generateCorsRequests(requestResponse)
+            val urlWithProto = messageEditor.httpService?.protocol + "://" + messageEditor.httpService?.host
 
             withContext(Dispatchers.Swing) {
                 SwingUtilities.invokeLater {
                     for (request in requests) {
                         responseViewer?.setMessage(request.response ?: ByteArray(0), false)
-                        val color = helper.evaluateColor(request)
+                        val color = helper.evaluateColor(request, urlWithProto)
                         createCors(request, color)
                     }
                 }

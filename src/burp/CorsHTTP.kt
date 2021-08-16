@@ -37,12 +37,14 @@ class HttpListener(private val callbacks: IBurpExtenderCallbacks, private val ta
                 requests.add(messageInfo)
 
                 // add all cors requests
-                val url = table.corsOptions.urlTextField.text
-                val helper = CorsHelper(callbacks, url)
+                val userUrl = table.corsOptions.urlTextField.text
+                val helper = CorsHelper(callbacks, userUrl)
                 requests.addAll(helper.generateCorsRequests(messageInfo))
 
                 for (req in requests) {
-                    val color = helper.evaluateColor(req)
+                    val url = analyzedRequest.url
+                    val urlWithProto = url.protocol + "://" + url.host
+                    val color = helper.evaluateColor(req, urlWithProto)
                     colors.add(color)
                     if (color != null) {
                         generateIssue(color, req, analyzedRequest.url)

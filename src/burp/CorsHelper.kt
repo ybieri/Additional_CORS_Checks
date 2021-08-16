@@ -3,6 +3,8 @@
 package burp
 
 import java.awt.Color
+import java.io.PrintWriter
+import java.net.URL
 import java.util.*
 
 class CorsHelper(private val callbacks: IBurpExtenderCallbacks, private val url: String) {
@@ -127,7 +129,7 @@ class CorsHelper(private val callbacks: IBurpExtenderCallbacks, private val url:
     }
 
     // returns color of a response
-    fun evaluateColor(requestResponse: IHttpRequestResponse): Color? {
+    fun evaluateColor(requestResponse: IHttpRequestResponse, urlWithProto: String): Color? {
         val request = callbacks.helpers.analyzeRequest(requestResponse.request)
 
         // the response can be null. If so, ignore.
@@ -155,7 +157,9 @@ class CorsHelper(private val callbacks: IBurpExtenderCallbacks, private val url:
             } else if (origin != null && respHeader.replace(" ", "")
                     .contains("Access-Control-Allow-Origin: $origin".replace(" ", ""), ignoreCase = true)
             ) {
-                acao = true
+                if(origin != urlWithProto) {
+                    acao = true
+                }
             }
         }
 
