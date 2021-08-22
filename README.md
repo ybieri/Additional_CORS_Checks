@@ -42,3 +42,6 @@ The easy way to install CORSair is using the BApp Store. Open Burp and navigate 
 
 ## Author
 * Yves Bieri (Github: [ybieri](https://github.com/ybieri), Twitter: [yves_bieri](https://twitter.com/yves_bieri))
+
+## Credits
+Thanks to https://github.com/chenjj/CORScanner for the inspiration and https://github.com/portswigger/bookmarks for the Burp template.
