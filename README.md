@@ -13,29 +13,29 @@ CORS* - Additional CORS Checks can be run in either `automatic` or `manual` mode
 * There are options to only endable it for in-scope items and to exclude requests with certain file extensions.
 * The `URL for CORS Request` is used to test for arbitrary reflection and as prefix/suffix in testing regex misconfigurations.
 
-![Arbitrary origin reflected](https://github.com/ybieri/CORSair/blob/master/doc/arbitrary_origin.png)
+![Arbitrary origin reflected](https://github.com/ybieri/Additional_CORS_Checks/blob/master/doc/arbitrary_origin.png)
 
 * If a potential misconfiguration is discovered, the request is highlighted in red (see request #3 above). 
 * The request here does reflect the `null` origin and has `Access-Control-Allow-Credentials: true` set.
 
-![Null origin reflected](https://github.com/ybieri/CORSair/blob/master/doc/null_origin.png)
+![Null origin reflected](https://github.com/ybieri/Additional_CORS_Checks/blob/master/doc/null_origin.png)
 
 * If an issue is detected, it is also reported in the `Target` and `Dashboard` tabs.
 
-![Issue](https://github.com/ybieri/CORSair/blob/master/doc/issue.png)
+![Issue](https://github.com/ybieri/Additional_CORS_Checks/blob/master/doc/issue.png)
 
 ### Manual
 * Requests can be added to CORS* using the extension menu.
 
-![Add to cors*](https://github.com/ybieri/CORSair/blob/master/doc/add_to_corsair.png)
+![Add to cors*](https://github.com/ybieri/Additional_CORS_Checks/blob/master/doc/add_to_corsair.png)
 
 * The requests to test for CORS misconfiguration can then be sent using the `Send CORS requests for selected entry` button.
 
-![Send requests](https://github.com/ybieri/CORSair/blob/master/doc/send_requests.png)
+![Send requests](https://github.com/ybieri/Additional_CORS_Checks/blob/master/doc/send_requests.png)
 
 ## Installation
 ### Manual Installation
-Start Burp and navigate to the `Extender` tab, `Extensions`, `Add`. Choose the [`CORS*`](https://github.com/ybieri/CORSair/blob/master/CORSair_v0.9.jar) JAR file to install the extension.
+Start Burp and navigate to the `Extender` tab, `Extensions`, `Add`. Choose the [`CORS*`](https://github.com/ybieri/Additional_CORS_Checks/blob/master/CORSair_v0.9.jar) JAR file to install the extension.
 
 ### Installation from BApp Store
 The easy way to install CORS* is using the BApp Store. Open Burp and navigate to the `Extender` tab, then to the `BApp Store` tab. Select `CORS*` and hit the `Install` button to install the extension.
