@@ -5,7 +5,7 @@ It can spot trivial misconfigurations like arbitrary origin reflection, but also
 An issue is created if a dangeours origin is reflected. If `Access-Control-Allow-Credentials: true` is also set, the issue is rated high, otherwise low. Finally, the user has to decide whether the reflected Origin is intended (e.g. CDN) or whether it is a security issue.
 
 ## Features
-CORS* - Additional CORS Checks can be run in either `automatic` or `manual` mode.
+`CORS* - Additional CORS Checks` can be run in either `automatic` or `manual` mode.
 
 ### Automatic
 * In the CORS* tab, the extension can be activated.
