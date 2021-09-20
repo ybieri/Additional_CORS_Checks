@@ -16,9 +16,9 @@ class BurpExtender : IBurpExtender {
         val menuItem = CorsMenu(table)
         HttpListener(callbacks, table)
 
-        callbacks.setExtensionName("CORSair")
+        callbacks.setExtensionName("CORS*")
         val stdout = PrintWriter(callbacks.stdout, true)
-        stdout.println("CORSair loaded!")
+        stdout.println("CORS* loaded!")
 
         // create new Burp tab
         callbacks.addSuiteTab(tab)

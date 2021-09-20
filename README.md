@@ -1,14 +1,14 @@
-# Burp Extension: CORSair
+# Burp Extension: CORS* - Additional CORS Checks
 ## Description
 This extension can be used to test websites for CORS misconfigurations. 
 It can spot trivial misconfigurations like arbitrary origin reflection, but also more sublte ones where a regex is not properly configured (e.g. www.victim.com.attacker.com).
 An issue is created if a dangeours origin is reflected. If `Access-Control-Allow-Credentials: true` is also set, the issue is rated high, otherwise low. Finally, the user has to decide whether the reflected Origin is intended (e.g. CDN) or whether it is a security issue.
 
 ## Features
-CORSair can be run in either `automatic` or `manual` mode.
+CORS* - Additional CORS Checks can be run in either `automatic` or `manual` mode.
 
 ### Automatic
-* In the CORSair tab, the extension can be activated.
+* In the CORS* tab, the extension can be activated.
 * If activated, the extension will test CORS misconfigurations for each proxy request by sending multiple requests with different origins.
 * There are options to only endable it for in-scope items and to exclude requests with certain file extensions.
 * The `URL for CORS Request` is used to test for arbitrary reflection and as prefix/suffix in testing regex misconfigurations.
@@ -25,9 +25,9 @@ CORSair can be run in either `automatic` or `manual` mode.
 ![Issue](https://github.com/ybieri/CORSair/blob/master/doc/issue.png)
 
 ### Manual
-* Requests can be added to CORSair using the extension menu.
+* Requests can be added to CORS* using the extension menu.
 
-![Add to corsair](https://github.com/ybieri/CORSair/blob/master/doc/add_to_corsair.png)
+![Add to cors*](https://github.com/ybieri/CORSair/blob/master/doc/add_to_corsair.png)
 
 * The requests to test for CORS misconfiguration can then be sent using the `Send CORS requests for selected entry` button.
 
@@ -35,10 +35,10 @@ CORSair can be run in either `automatic` or `manual` mode.
 
 ## Installation
 ### Manual Installation
-Start Burp and navigate to the `Extender` tab, `Extensions`, `Add`. Choose the [`CORSair`](https://github.com/ybieri/CORSair/blob/master/CORSair_v0.9.jar) JAR file to install the extension.
+Start Burp and navigate to the `Extender` tab, `Extensions`, `Add`. Choose the [`CORS*`](https://github.com/ybieri/CORSair/blob/master/CORSair_v0.9.jar) JAR file to install the extension.
 
 ### Installation from BApp Store
-The easy way to install CORSair is using the BApp Store. Open Burp and navigate to the `Extender` tab, then to the `BApp Store` tab. Select `CORSair` and hit the `Install` button to install the extension.
+The easy way to install CORS* is using the BApp Store. Open Burp and navigate to the `Extender` tab, then to the `BApp Store` tab. Select `CORS*` and hit the `Install` button to install the extension.
 
 ## Author
 * Yves Bieri (Github: [ybieri](https://github.com/ybieri), Twitter: [yves_bieri](https://twitter.com/yves_bieri))

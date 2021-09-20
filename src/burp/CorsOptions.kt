@@ -10,7 +10,7 @@ class CorsOptions(
     private val loadPanel = JPanel(FlowLayout(FlowLayout.RIGHT))
     val urlTextField = JTextField("www.example.com", 20)
     private val configPanel = JPanel(FlowLayout(FlowLayout.LEFT))
-    val isActive = JCheckBox("Activate CORSair?")
+    val isActive = JCheckBox("Activate CORS*?")
     val inScope = JCheckBox("Only in scope?")
     private val ignoreJSAndImages = JCheckBox("Ignore extensions:")
     val ignoreExtension = JTextField("ico, svg, js, css, png", 30)

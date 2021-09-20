@@ -18,7 +18,7 @@ import javax.swing.table.TableRowSorter
 
 class CorsTab(callbacks: IBurpExtenderCallbacks) : ITab {
     val corsTable = CorsPanel(callbacks)
-    override fun getTabCaption() = "CORSair"
+    override fun getTabCaption() = "CORS*"
     override fun getUiComponent() = corsTable.panel
 
 }
