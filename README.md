@@ -8,7 +8,7 @@ An issue is created if a dangeours origin is reflected. If `Access-Control-Allow
 `CORS* - Additional CORS Checks` can be run in either `automatic` or `manual` mode.
 
 ### Automatic
-* In the CORS* tab, the extension can be activated.
+* In the `CORS*` tab, the extension can be activated.
 * If activated, the extension will test CORS misconfigurations for each proxy request by sending multiple requests with different origins.
 * There are options to only endable it for in-scope items and to exclude requests with certain file extensions.
 * The `URL for CORS Request` is used to test for arbitrary reflection and as prefix/suffix in testing regex misconfigurations.
