@@ -25,7 +25,7 @@ An issue is created if a dangeours origin is reflected. If `Access-Control-Allow
 ![Issue](https://github.com/ybieri/Additional_CORS_Checks/blob/master/doc/issue.png)
 
 ### Manual
-* Requests can be added to CORS* using the extension menu.
+* Requests can be added to `CORS*` using the extension menu.
 
 ![Add to cors*](https://github.com/ybieri/Additional_CORS_Checks/blob/master/doc/add_to_corsair.png)
 
@@ -38,7 +38,7 @@ An issue is created if a dangeours origin is reflected. If `Access-Control-Allow
 Start Burp and navigate to the `Extender` tab, `Extensions`, `Add`. Choose the [`CORS*`](https://github.com/ybieri/Additional_CORS_Checks/blob/master/CORSair_v0.9.jar) JAR file to install the extension.
 
 ### Installation from BApp Store
-The easy way to install CORS* is using the BApp Store. Open Burp and navigate to the `Extender` tab, then to the `BApp Store` tab. Select `CORS*` and hit the `Install` button to install the extension.
+The easy way to install `CORS* - Additional CORS Checks` is using the BApp Store. Open Burp and navigate to the `Extender` tab, then to the `BApp Store` tab. Select `CORS*` and hit the `Install` button to install the extension.
 
 ## Author
 * Yves Bieri (Github: [ybieri](https://github.com/ybieri), Twitter: [yves_bieri](https://twitter.com/yves_bieri))
