@@ -35,7 +35,7 @@ An issue is created if a dangeours origin is reflected. If `Access-Control-Allow
 
 ## Installation
 ### Manual Installation
-Start Burp and navigate to the `Extender` tab, `Extensions`, `Add`. Choose the [`Additional_CORS_Checks*`](https://github.com/ybieri/Additional_CORS_Checks/blob/master/Additional%20CORS%20Checks_v0.9.jar) JAR file to install the extension.
+Start Burp and navigate to the `Extender` tab, `Extensions`, `Add`. Choose the [`CORS* - Additional_CORS_Checks`](https://github.com/ybieri/Additional_CORS_Checks/blob/master/Additional%20CORS%20Checks_v0.9.jar) JAR file to install the extension.
 
 ### Installation from BApp Store
 The easy way to install `CORS* - Additional CORS Checks` is using the BApp Store. Open Burp and navigate to the `Extender` tab, then to the `BApp Store` tab. Select `CORS*` and hit the `Install` button to install the extension.
