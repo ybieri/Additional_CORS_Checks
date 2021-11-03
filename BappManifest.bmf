@@ -9,5 +9,5 @@ ProOnly: False
 Author: Ybieri
 ShortDescription: Test websites for CORS misconfigurations.
 EntryPoint: build/libs/additional-cors-checks-all.jar
-BuildCommand: ./gradlew clean build fatJar 
+BuildCommand: gradle fatJar
 SupportedProducts: Pro, Community
