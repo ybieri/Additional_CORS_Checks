@@ -5,9 +5,9 @@ RepoName: additional-cors-checks
 ScreenVersion: 0.9
 SerialVersion: 0
 MinPlatformVersion: 0
-ProOnly: False
+ProOnly: True
 Author: Ybieri
 ShortDescription: Test websites for CORS misconfigurations.
 EntryPoint: build/libs/additional-cors-checks-all.jar
 BuildCommand: ./gradlew clean build fatJar 
-SupportedProducts: Pro, Community
+SupportedProducts: Pro
