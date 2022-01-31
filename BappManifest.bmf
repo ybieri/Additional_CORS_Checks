@@ -3,11 +3,11 @@ ExtensionType: 1
 Name: CORS*, Additional CORS Checks
 RepoName: additional-cors-checks
 ScreenVersion: 0.9
-SerialVersion: 0
+SerialVersion: 1
 MinPlatformVersion: 0
 ProOnly: True
 Author: Ybieri
 ShortDescription: Test websites for CORS misconfigurations.
-EntryPoint: build/libs/additional-cors-checks-all.jar
+EntryPoint: build/libs/additional-cors-checks.jar
 BuildCommand: ./gradlew clean build fatJar 
 SupportedProducts: Pro
