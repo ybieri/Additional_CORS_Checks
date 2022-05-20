@@ -1,0 +1,21 @@
+<p>Description</p>
+<p>This extension can be used to test websites for CORS misconfigurations. It can spot trivial misconfigurations, like arbitrary origin reflection, but also more subtle ones where a regex is not properly configured. An issue is created if a dangerous origin is reflected. If "Access-Control-Allow-Credentials: true" is also set, the issue is rated high, otherwise low. Finally, the user has to decide whether the reflected Origin is intended (e.g. CDN) or whether it is a security issue.</p>
+
+<p>Features</p>
+<p>"CORS* - Additional CORS Checks" can be run in either automatic or manual mode.</p>
+
+<p>Automatic</p>
+<ul>
+	<li>In the CORS* tab, the extension can be activated.</li>
+	<li>If activated, the extension will test CORS misconfigurations for each proxy request by sending multiple requests with different origins.</li>
+	<li>There are options to only endable it for in-scope items and to exclude requests with certain file extensions.</li>
+	<li>The "URL for CORS Request" is used to test for arbitrary reflection and as prefix/suffix in testing regex misconfigurations.</li>
+	<li>If a potential misconfiguration is discovered, the request is highlighted in red</li>
+	<li>If an issue is detected, it is also reported in the Target and Dashboard tabs.</li>
+</ul>
+
+<p>Manual</p>
+<ul>
+	<li>Requests can be added to CORS* using the extension menu.</li>
+	<li>The requests to test for CORS misconfiguration can then be sent using the "Send CORS requests for selected entry" button.</li>
+</ul>
