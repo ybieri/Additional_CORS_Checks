@@ -3,9 +3,6 @@
 package burp
 
 import java.awt.Color
-import java.io.PrintWriter
-import java.lang.reflect.Method
-import java.net.URL
 import java.util.*
 
 class CorsHelper(private val callbacks: IBurpExtenderCallbacks, private val url: String) {
