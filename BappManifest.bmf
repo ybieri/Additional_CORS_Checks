@@ -1,0 +1,13 @@
+Uuid: 420a28400bad4c9d85052f8d66d3bbd8
+ExtensionType: 1
+Name: CORS*, Additional CORS Checks
+RepoName: additional-cors-checks
+ScreenVersion: 0.9
+SerialVersion: 1
+MinPlatformVersion: 0
+ProOnly: True
+Author: Ybieri
+ShortDescription: Test websites for CORS misconfigurations.
+EntryPoint: build/libs/additional-cors-checks.jar
+BuildCommand: ./gradlew clean build fatJar 
+SupportedProducts: Pro
