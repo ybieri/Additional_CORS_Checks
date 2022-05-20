@@ -34,11 +34,7 @@ An issue is created if a dangeours origin is reflected. If `Access-Control-Allow
 ![Send requests](https://github.com/ybieri/Additional_CORS_Checks/blob/master/doc/send_requests.png)
 
 ## Installation
-### Manual Installation
-Start Burp and navigate to the `Extender` tab, `Extensions`, `Add`. Choose the [`CORS* - Additional_CORS_Checks`](https://github.com/ybieri/Additional_CORS_Checks/blob/master/Additional%20CORS%20Checks_v0.9.jar) JAR file to install the extension.
-
-### Installation from BApp Store
-The easy way to install `CORS* - Additional CORS Checks` is using the BApp Store. Open Burp and navigate to the `Extender` tab, then to the `BApp Store` tab. Select `CORS*` and hit the `Install` button to install the extension.
+To install `CORS* - Additional CORS Checks` use the BApp Store. Open Burp and navigate to the `Extender` tab, then to the `BApp Store` tab. Select `CORS*` and hit the `Install` button to install the extension.
 
 ## Author
 * Yves Bieri (Github: [ybieri](https://github.com/ybieri), Twitter: [yves_bieri](https://twitter.com/yves_bieri))
