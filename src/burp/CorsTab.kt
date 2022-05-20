@@ -8,7 +8,6 @@ import kotlinx.coroutines.withContext
 import java.awt.Color
 import java.awt.Component
 import java.awt.FlowLayout
-import java.io.PrintWriter
 import java.net.URL
 import javax.swing.*
 import javax.swing.table.AbstractTableModel
@@ -27,6 +26,7 @@ data class CorsObj(
     val requestResponse: IHttpRequestResponse,
     val host: String,
     val url: URL,
+    val origin: String,
     val method: String,
     val statusCode: String,
     val length: String,
@@ -48,6 +48,7 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
 
     private val repeatInTable = JCheckBox("Add repeated request to table")
 
+    private val issueHelper = IssueHelper(callbacks)
     init {
 
         // black magic with Java Tables
@@ -72,11 +73,12 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
         table.autoResizeMode = JTable.AUTO_RESIZE_OFF
         table.columnModel.getColumn(0).preferredWidth = 30 // ID
         table.columnModel.getColumn(1).preferredWidth = 245 // Host
-        table.columnModel.getColumn(2).preferredWidth = 825 // URL
-        table.columnModel.getColumn(3).preferredWidth = 50 // Method
-        table.columnModel.getColumn(4).preferredWidth = 50 // Status
-        table.columnModel.getColumn(5).preferredWidth = 50 // Length
-        table.columnModel.getColumn(6).preferredWidth = 50 // MIME
+        table.columnModel.getColumn(2).preferredWidth = 475 // URL
+        table.columnModel.getColumn(3).preferredWidth = 300 // Origin
+        table.columnModel.getColumn(4).preferredWidth = 60 // Method
+        table.columnModel.getColumn(5).preferredWidth = 60 // Status
+        table.columnModel.getColumn(6).preferredWidth = 60 // Length
+        table.columnModel.getColumn(7).preferredWidth = 60 // MIME
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
         table.rowSorter = rowSorter
         table.autoscrolls = true
@@ -137,31 +139,38 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
         } else {
             null
         }
+
         val host = requestInfo.url.host
         val url = requestInfo.url
+        val issueHelper = IssueHelper(callbacks)
+        val origin = response?.let { issueHelper.getOrigin(it) }
         val method = requestInfo?.method ?: ""
         val statusCode = response?.statusCode?.toString() ?: ""
         val length = requestResponse.response?.size?.toString() ?: ""
         val mimeType = response?.inferredMimeType ?: ""
 
-        val cors = CorsObj(
-            savedRequestResponse,
-            host,
-            url,
-            method,
-            statusCode,
-            length,
-            mimeType,
-            color
-        )
-        model.addCors(cors)
+        val cors = origin?.let {
+            CorsObj(
+                savedRequestResponse,
+                host,
+                url,
+                it,
+                method,
+                statusCode,
+                length,
+                mimeType,
+                color
+            )
+        }
+        if (cors != null) {
+            model.addCors(cors)
+        }
 
     }
 
 
     private fun repeatRequest() {
         model.refreshCors()
-
         GlobalScope.launch(Dispatchers.IO) {
 
             val requestResponse = try {
@@ -180,6 +189,11 @@ class CorsPanel(private val callbacks: IBurpExtenderCallbacks) {
                     for (request in requests) {
                         responseViewer?.setMessage(request.response ?: ByteArray(0), false)
                         val color = helper.evaluateColor(request, urlWithProto)
+
+                        if (color != null) {
+                            val analyzedRequest = callbacks.helpers.analyzeRequest(request)
+                            issueHelper.generateIssue(color, request, analyzedRequest.url)
+                        }
                         createCors(request, color)
                     }
                 }
@@ -207,6 +221,7 @@ class CorsModel : AbstractTableModel() {
             "ID",
             "Host",
             "URL",
+            "Origin",
             "Method",
             "Status",
             "Length",
@@ -233,6 +248,7 @@ class CorsModel : AbstractTableModel() {
             4 -> String::class.java
             5 -> String::class.java
             6 -> String::class.java
+            7 -> String::class.java
             else -> throw RuntimeException()
         }
     }
@@ -244,10 +260,11 @@ class CorsModel : AbstractTableModel() {
             0 -> rowIndex
             1 -> cors.host
             2 -> cors.url.toString()
-            3 -> cors.method
-            4 -> cors.statusCode
-            5 -> cors.length
-            6 -> cors.mimeType
+            3 -> cors.origin
+            4 -> cors.method
+            5 -> cors.statusCode
+            6 -> cors.length
+            7 -> cors.mimeType
             else -> ""
         }
     }
@@ -265,7 +282,7 @@ class CorsModel : AbstractTableModel() {
     fun addCors(corsObj: CorsObj) {
         corsObjArr.add(corsObj)
         displayedCors = corsObjArr
-        displayedCors?.let{fireTableRowsInserted(displayedCors.lastIndex, displayedCors.lastIndex)}
+        fireTableRowsInserted(displayedCors.lastIndex, displayedCors.lastIndex)
         corsObj.color?.let { setColor(displayedCors.lastIndex, it) }
         refreshCors()
     }
